@@ -9,14 +9,19 @@
 
 <body>
     <script>
-        function f1(){
-            let n = 5;
-            if(true){
-                let n = 10;
-            }
-            console.log(n);
-        }
-        f1();
+       var getGlobal = function (){
+           if (typeof self !=="undefined") {
+               return self;
+           }
+           if (typeof window !=="undefined") {
+               return window;
+           }
+           if(typeof global !=="undefined"){
+               return global;
+           }
+           throw new Error('unable to locate global object');
+       }
+       
     </script>
 </body>
 
