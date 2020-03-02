@@ -823,7 +823,124 @@
 
 1. 变量声明语句
 
-    
+    //全部报错
+    // let[(a)]=[1];
+    // let{x:(c)} = {};
+    // let({x:c}) = {};
+    // let{(x:c)}={};
+    // let{(x):c} = {};
+    // let{o:({p:P})}={o:{p:2}};
+>上面6个语句都会报错，因为他们都是变量声明语句，模式不能使用圆括号。
+2. 函数参数
+
+>函数参数也属于变量声明，因此不能带圆括号。
+
+    //全部报错
+    //function f([(z)]){return z}
+    //function f([z,(x)]){return x}
+3. 赋值语句的模式
+
+    //全部报错
+    // （{p:a}）={p:42};
+    // ([a])=[5]
+>上面代码将整个模式放在圆括号之中，导致报错。
+
+    [({p:a}),{x:c}]=[{},{}]
+>上面代码将一部分模式放在圆括号之中，导致报错。
+
+#### 可使用圆括号的情况
+
+>可以使用圆括号的情况只有一种，赋值语句的非模式部分，可以使用圆括号
+
+    // [(p)]=[{}]
+    //({p:(d)})={})
+    // [(parseInt.prop)]=[3];
+>上面三行语句都可以正确执行，因为首先他们都是赋值语句，而不是声明语句；其次他们的圆括号都不属于模式的一部分。第一行语句中，模式是提取数组的第一个成员，跟圆括号无关；第二行语句中，模式是p，而不是d；第三行语句与第一句的性质一致。
+
+### 7.用途
+
+>变量的解构赋值用途很多
+
+1. 交换变量的值
+
+    let x = 1;
+    let y = 2;
+    [x,y] = [y,x];
+>上面代码交换变量x和y的值，这样的写法不仅简洁，而且易读，语义非常清晰。
+2. 从函数返回多个值
+
+>函数只能返回一个值，如果要返回多个值，只能将他们放在数组或对象里返回。有了解构赋值，取出这些值非常方便。
+
+    //返回一个数组
+    // function example(){
+    //     return [1,2,3]
+    // }
+    // let [a,b,c] = example();
+    //返回一个对象
+    // function example(){
+    //     return {
+    //         foo: 1,
+    //         bar: 2
+    //     }
+    // }
+    // let {foo,bar} = example();
+
+3. 函数参数的定义
+
+>解构赋值可以方便地将一组参数与变量名对应起来
+
+    function f([x,y,z]){}   
+    f([1,2,3]);
+    function f({x,y,z}){}
+    f({z:3,y:2,x:1});
+
+4. 提取JSON数据
+
+>解构赋值对提取Json对象中的数据，尤其有用
+
+    let jsonData = {
+        id: 42,
+        status: "ok",
+        data:[867,5309]
+    }
+    let{id,status,data:number} = jsonData;
+    console.log(id,status,number);
+>上面代码可以快速提取Json数据的值
+
+5. 函数参数的默认值
+
+    jQuery.ajax= function (url,{
+        async = true,
+        beforeSend = function(){},
+        cake = true,
+        complete = function(){},
+        crossDomain = false,
+        global = true,
+    }={}){//...do stuff}
+>指定参数的默认值，就避免了在函数体内部再 `var foo = config.foo || "default foo"`这样的语句。
+
+6. 遍历Map结构
+
+>任何部署了Iterator接口的对象，都可以for...of循环变量。Map结构原生支持Iterator接口，配合变量的解构赋值，获取键名和键值就非常方便。
+
+    const map = new Map();
+    map.set('first','hello');
+    map.set('second','world');
+    for(let[key,value] of map){
+        console.log(key + "is" + value);
+    }
+>如果只想获取键名，或者只想获取键值，可以写成下面这样
+
+    for(let [key] of map){
+    }
+    for(let [,value] of map){
+    }
+
+7. 输入模板的指定方法
+
+    >加载模块时，往往需要指定输入哪些方法，解构赋值使得输入语句非常清晰。
+
+    const {sourceMapConsumer, SourceNOde} = require('soure-map')
 
 
     

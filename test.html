@@ -9,9 +9,12 @@
 
 <body>
     <script>
-        //全部报错
-        // let[(a)]=[1];
-        // let{x:(c)} = {};
+        const map = new Map();
+        map.set('first', 'hello');
+        map.set('second', 'world');
+        for (let [, value] of map) {
+            console.log(value);
+        }
     </script>
 </body>
 
